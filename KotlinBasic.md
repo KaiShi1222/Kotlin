@@ -228,6 +228,103 @@ Unit和void的区别: Unit是一个类型，具体说是**只有一个**Unit实�
   }
   ```
 
+#### 3.3.4 扩展函数
+
+通过扩展函数，可以在不破坏原有的代码的情况下，提高了类的扩展性（功能更强）实际上Kotlin标准库很多都是J通过ava的类的扩展函数组成的
+
+如下的扩展函数中， String叫做接收者类型，也就是说这是一个给String类扩展的扩展函数, this是接收者对象，一个具体的String类型的实例
+
+```kotlin
+fun String.lastChar() = this.get(this.length - 1)
+```
+
+扩展函数和类的成员函数本质上没有什么不同，只是扩展函数不能破坏类的封装性，即访问类内私有的成员
+
+扩展函数是静态函数, 假设在上文中的函数是在一个叫StringUtil.kt的文件中定义如下函数(kotlin不会定义这样的工具类), 在Java中这样调用
+
+```java
+☕
+char c = StringUtilKt.lastChar("hello");
+```
+
+给子类和父类都重写一个扩展函数, 调用时，是根据变量***静态***的类型
+
+```kotlin
+🏝
+open class View
+class Button : View()
+
+fun View.show() = println("I am a view")
+fun Button.show() =  println("I am a button")
+
+fun main() {
+    val v : View = Button()
+    v.show() // I am a view
+}
+```
+
+扩展属性
+
+没有地方存储扩展的属性，不可能给现存的Java实例添加属性
+
+```kotlin
+🏝
+val String.lastChar: Char
+    // 没有field支持字段，必须定义get方法, 没有地方存储初始化值，因此不能初始化
+    get = get(length - 1)
+
+var StringBuilder.lastChar: Char
+    get() = get(length -1)
+    set(value) {
+        this.setCharAt(length - 1, value)
+    }
+```
+
+#### 3.3.5 局部函数
+
+局部函数的作用在于: 进一步**抽象**（减少重复）
+
+简洁: 类的API只包含必须的方法
+
+例子:
+
+```kotlin
+class User(val id: Int, val name: String, val address: String)
+
+fun saveUser(user: User) {
+    if (user.name.isEmpty()) {
+        throw IllegalArgumentException("${user.id}'s name is empty")
+    }
+    if (user.address.isEmpty()) {
+        throw IllegalArgumentException("${user.id}'s address is empty")
+    }
+}
+
+// 局部函数
+fun saveUser2(user: User) {
+    fun validate(value: String, fieldName: String) {
+        if (value.isEmpty()) {
+            throw IllegalArgumentException("${user.id}'s $fieldName is empty")
+        }
+    }
+    validate(user.name, "name")
+    validate(user.address, "address")
+}
+
+// 在扩展函数中的局部函数
+fun User.saveUser3() {
+    fun validate(value: String, fieldName: String) {
+        if (value.isEmpty()) {
+            throw IllegalArgumentException("${id}'s $fieldName is empty")
+        }
+    }
+    validate(name, "name")
+    validate(address, "address")
+}
+```
+
+
+
 ### 3.3 类和属性
 
 #### 3.3.1 类
