@@ -26,7 +26,7 @@ Kotlin出现的背景:
 
 ### 2.2 业务场景
 
-## 3. Kotlin基础和Java的比较
+## 3. Kotlin基础
 
 Kotlin是一门静态类型类型语言，支持面向对象和面向函数编程
 
@@ -559,6 +559,26 @@ public static void main(String[] args) {
   }
   ```
 
+* 数据类
+
+  在实际的开发中，会有很多只保存数据的类，在Java中需要通过IntelliJ IDE为他们生成模板代码， 即重写toString, hashCode, equals等方法
+
+  Kotlin中<font color=red>**简化**</font>了这个做法, 注意只是简化
+
+  通过将一个类标记为data，这等价于重写了toString, hashCode, equals的Java类
+
+  其中equals和hashCode(如果两个对象相等，hash值一定相等)的计算会将所有**主**构造方法中的属性考虑进去
+
+  ```kotlin
+  data Person(val name: String, val age: Int)
+  ```
+
+  虽然可以用var修饰数据类的属性, 但kotlin强烈建议使用val确保数据类实例的不变性
+
+  这样的好处在于: 多线程不要担心对象的值被修改, 如果这个对象作为容器类的key, 保持了key的不变性
+
+  通过重写copy方法，可以得到不可变对象的一个**副本**
+
 #### 3.3.2 属性
 
 当不需要一个字段去存储属性的值的时候，可以通过Kotlin的自定义访问器实现, 完整的语法规则为
@@ -718,6 +738,7 @@ kotlin中的for循环比Java的for循环强大, 或者说语法糖比较多
 Kotlin的接口和Java **8**的接口类似, 可以添加具体的方法实现
 
 ```kotlin
+🏝
 interface A {
     fun foo()
     fun bar() {
@@ -729,6 +750,7 @@ interface A {
 等价的Java 8 代码
 
 ```java
+🏝
 interface A {
     void foo();
     default void bar() {
@@ -740,6 +762,7 @@ interface A {
 Kotlin和Java一样，接口可以继承。可以 和类一样添加自己的属性和方法，或者重载实现
 
 ```kotlin
+🏝
 interface Name {
 
     val name: String
@@ -766,6 +789,7 @@ class Person(override val firstName: String, override val lastName: String) : Pe
 如果两个接口中定义了相同的方法(方法名一样，参数一样), 一个类实现这两个接口，必须自己实现这个方法
 
 ```kotlin
+🏝
 interface A {
     fun foo() { print("A") }
     fun bar()
@@ -804,7 +828,7 @@ Kotlin的设计思想直接采用了这样的做法，默认情况下所有的�
 比如我们定义一个Car类和一个BMW类 :simle:
 
 ```kotlin
-
+🏝
 open class Car {
 
     fun launch() {
