@@ -873,6 +873,66 @@ p.s open是表示这个类的**可继承性**
 
 
 
+
+
+## 4. Kotlin 核心
+
+### 4.1 类型系统
+
+所谓类型，就是数据的**分类**。它决定了数据的值和该类型数据可以做什么。比如String类型可以是赋值"abc", 调用string.length方法。
+
+Java中经常会出现空指针异常这个现象，这个问题是因为Java中，数据可以为null或该数据的实际类型.为了防止空指针错误，在调用的方法前，我们通常要进行空判断。
+
+Kotlin针对这个问题的解决方案是：将类型非为可空的和不可空的，并**显示**的声明。让可能在运行时发生的空指针异常，提前在**编译期**间暴露，且不会影响性能
+
+比如如下Java代码
+
+```java
+☕
+public int getNameLength(String name) {
+    return name.length();
+}
+```
+
+这个函数内部没有判断name是否为空，当我们传递null调用的时候会抛出异常
+
+```kotlin
+🏝
+// name不能为空
+fun getNameLength(name: String) = name.length
+```
+
+如果这样调用，getNameLength(null)， 编译时就报错
+
+如果name可以为空,需要这样定义
+
+```kotlin
+🏝
+// name可以为空
+fun getNameLength(name: String?) = name?.length
+```
+
+#### 4.1.1 Elvis运算符  ?:
+
+运算符 ?: 可以理解为**二选一**. 
+
+```kotlin
+🏝
+// 不为空，返回s, 为空返回""
+fun foo(s: String?) = s ?: ""
+```
+
+常用的场景
+
+```kotlin
+🏝
+fun foo(s: String?) = s.length :? throw("s is null")
+```
+
+####  4.1.2 安全转换 as?
+
+
+
 ## 5.*TODO*
 
 function Nothing
