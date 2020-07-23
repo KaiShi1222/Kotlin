@@ -918,20 +918,90 @@ fun getNameLength(name: String?) = name?.length
 
 ```kotlin
 🏝
-// 不为空，返回s, 为空返回""
-fun foo(s: String?) = s ?: ""
+fun foo(s: String?) {
+    // 二选一
+    // 非空: s
+    // null: ""
+    val t: String = s ?: ""
+}
+
+fun strLenSafe(s: String?) : Int = s?.length ?: 0
+
+// 常用方式和异常或者return一起使用
+fun foo(s: String?) = s?.length ?: throw Exception("s is null")
 ```
 
-常用的场景
+#### 4.1.2 非空断言 !! 和延迟初始化 ####
 
 ```kotlin
-🏝
-fun foo(s: String?) = s.length :? throw("s is null")
+// 空不空我自己负责
+fun ignoreNulls(s: String?) {
+    val string : String = s!!  // 异常指向这一行，而不是用到的那行
+    println(string)
+}
+
+// 在Ａ函数检测过null,在Ｂ函数使用，明确知道变量不为null的时候，可以使用!!
+
+// 只会指出这一行为空，不知道是哪个属性为null
+person.name!!.country!!.address // bad
 ```
 
-####  4.1.2 安全转换 as?
+延迟初始化: 如果都定义成可空的变量，在使用时候，每次需要检查或者安全调用
 
+延迟初始化可以定义非空的变量，并在需要构造函数外初始化他们
 
+```kotlin
+class MyActivity: Activity() {
+    private lateinit textView: TextView
+    override onCreate(saveInstanceState: Bundle) {
+        textView = findViewById<TextView>(R.id.tv)
+    }
+}
+```
+
+另一个使用延迟初始化的地方是依赖注入（未做深入研究）
+
+#### 4.1.3 安全转换 as? ####
+
+```kotlin
+foo as? Type
+
+foo is Type: foo as Type
+foo !is Type: null
+```
+
+#### 4.1.4 可空类型 ####
+
+1. 扩展函数可以直接接受null， 而不需要安全调用（?.）.可以在扩展函数**内部**处理null
+
+```kotlin
+fun verifyInput(s: String?) {
+    if (s.isNullOrBlank()) {
+        println("please fill in a required value")
+    }
+}
+```
+
+2. 类型参数可空
+
+   泛型类和泛型函数的类型参数都可空，可以不用？声明
+
+```kotlin
+// 声明t:T？可以省略为t: T
+// T被推导为Any?
+fun <T> printHashCode(t: T) {
+    // t可空所以必须安全调用
+    println(t?.hashCode())
+}
+```
+
+3. 平台类型
+
+   kotlin调用Java的方法，针对kotlin不识别的**可空性注解**，kotlin会把java类型当成平台类型
+
+   所谓平台类型就是kotlin不知道这个类型可空还是不可空,所以需要安全的调用
+
+   设计思想: 让开发者自己负责处理
 
 ## 5.*TODO*
 
