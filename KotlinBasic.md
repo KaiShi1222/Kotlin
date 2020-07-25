@@ -1003,6 +1003,56 @@ fun <T> printHashCode(t: T) {
 
    设计思想: 让开发者自己负责处理
 
+#### 4.1.5 基本数据类型 ####
+
+1. 非null的基本数据类型
+
+   Kotlin不区分基本数据类型和引用类型. Java将两者区分开来，基本数据类型直接存**值**, 引用类型存**地址的引用**
+
+​       为了效率，Kotlin中Int类型直接编译成Java的基本数据类型
+
+​	   唯一例外: 泛型类 比如集合, 会编译成包装类 Int(Kotlin) -> Integer(Java)
+
+2. 可null的基本数据类型
+
+   Kotlin中用到可空的基本数据类型时，会被编译成Java的**包装类型**
+
+上述是底层的逻辑，在使用Kotlin定义变量或者属性时候，只需要考虑清楚它是可以为null还是不能为null
+
+3. 数字转换
+
+   Kotlin必须**显示**的转换数字类型, 在使用数字时，要留意不同类型， 避免一些想不到的错误
+
+   数值溢出和Java的完全相同
+
+   ```kotlin
+   // val b = 1L
+   val b : Long = 1
+   val a : Byte = 2
+   val c = a + b // 算术运算符重载， 可以接收适当的类型
+   ```
+
+#### 4.1.6 Kotlin中的Object和Nothing ####
+
+* Any
+
+  Any类想当于Java中的Object类, Any?可以接收null值.
+
+  Kotlin中使用Any时，会编译成Java字节码中Object
+
+* Nothing
+
+  作用: 不成功返回, 比如单元测试错误断言
+
+  ```kotlin
+  fun fail(message: String) : Nothing {
+      throw IllegalStateException(message)
+  }
+  val user = User(1, "luo", "japan")
+  // 不需要安全调用，编译器推断user不为空, 因为右边总是不能正常返回
+  val address = user.address ?: fail("No address")
+  ```
+
 ## 5.*TODO*
 
 function Nothing
